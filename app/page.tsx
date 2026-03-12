@@ -1,16 +1,19 @@
 "use client";
 
+import { useState } from "react";
 import { useExpenses } from "@/hooks/useExpenses";
 import SummaryCards from "@/components/dashboard/SummaryCards";
 import SpendingChart from "@/components/dashboard/SpendingChart";
 import CategoryChart from "@/components/dashboard/CategoryChart";
 import RecentExpenses from "@/components/dashboard/RecentExpenses";
 import EmptyState from "@/components/dashboard/EmptyState";
+import ExportModal from "@/components/export/ExportModal";
 import Link from "next/link";
-import { PlusCircle } from "lucide-react";
+import { PlusCircle, Download } from "lucide-react";
 
 export default function DashboardPage() {
   const { expenses, isLoaded } = useExpenses();
+  const [showExport, setShowExport] = useState(false);
 
   if (!isLoaded) {
     return (
@@ -37,14 +40,27 @@ export default function DashboardPage() {
             Overview of your personal finances
           </p>
         </div>
-        <Link
-          href="/add"
-          className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold px-4 py-2.5 rounded-xl transition-colors shadow-sm"
-        >
-          <PlusCircle size={16} />
-          Add Expense
-        </Link>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setShowExport(true)}
+            className="flex items-center gap-2 bg-white hover:bg-gray-50 text-gray-700 text-sm font-semibold px-4 py-2.5 rounded-xl transition-colors shadow-sm border border-gray-200"
+          >
+            <Download size={16} />
+            Export
+          </button>
+          <Link
+            href="/add"
+            className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold px-4 py-2.5 rounded-xl transition-colors shadow-sm"
+          >
+            <PlusCircle size={16} />
+            Add Expense
+          </Link>
+        </div>
       </div>
+
+      {showExport && (
+        <ExportModal expenses={expenses} onClose={() => setShowExport(false)} />
+      )}
 
       {/* Summary cards */}
       <SummaryCards expenses={expenses} />
