@@ -8,6 +8,8 @@ import {
   parseISO,
   format,
   subMonths,
+  differenceInDays,
+  getDay,
 } from "date-fns";
 
 export function formatCurrency(amount: number): string {
@@ -129,4 +131,64 @@ export function sortExpenses(expenses: Expense[]): Expense[] {
     if (b.date !== a.date) return b.date.localeCompare(a.date);
     return b.createdAt.localeCompare(a.createdAt);
   });
+}
+
+export function getDailyAverage(expenses: Expense[]): number {
+  if (expenses.length === 0) return 0;
+  const dates = expenses.map((e) => parseISO(e.date));
+  const earliest = new Date(Math.min(...dates.map((d) => d.getTime())));
+  const latest = new Date(Math.max(...dates.map((d) => d.getTime())));
+  const days = Math.max(differenceInDays(latest, earliest), 1);
+  return getTotalSpending(expenses) / days;
+}
+
+export function getMonthOverMonthChange(expenses: Expense[]): number | null {
+  const now = new Date();
+  const thisMonthStart = startOfMonth(now);
+  const thisMonthEnd = endOfMonth(now);
+  const lastMonth = subMonths(now, 1);
+  const lastMonthStart = startOfMonth(lastMonth);
+  const lastMonthEnd = endOfMonth(lastMonth);
+
+  const thisMonthTotal = expenses
+    .filter((e) => isWithinInterval(parseISO(e.date), { start: thisMonthStart, end: thisMonthEnd }))
+    .reduce((sum, e) => sum + e.amount, 0);
+
+  const lastMonthTotal = expenses
+    .filter((e) => isWithinInterval(parseISO(e.date), { start: lastMonthStart, end: lastMonthEnd }))
+    .reduce((sum, e) => sum + e.amount, 0);
+
+  if (lastMonthTotal === 0) return null;
+  return ((thisMonthTotal - lastMonthTotal) / lastMonthTotal) * 100;
+}
+
+export function getLargestExpense(expenses: Expense[]): Expense | null {
+  if (expenses.length === 0) return null;
+  return expenses.reduce((max, e) => (e.amount > max.amount ? e : max), expenses[0]);
+}
+
+export function getAverageTransaction(expenses: Expense[]): number {
+  if (expenses.length === 0) return 0;
+  return getTotalSpending(expenses) / expenses.length;
+}
+
+const DAY_NAMES = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+export function getDayOfWeekData(
+  expenses: Expense[]
+): { day: string; amount: number; count: number; average: number }[] {
+  const buckets = Array.from({ length: 7 }, () => ({ total: 0, count: 0 }));
+  for (const e of expenses) {
+    const dayIndex = getDay(parseISO(e.date));
+    buckets[dayIndex].total += e.amount;
+    buckets[dayIndex].count += 1;
+  }
+  // Reorder to start on Monday
+  const ordered = [1, 2, 3, 4, 5, 6, 0];
+  return ordered.map((i) => ({
+    day: DAY_NAMES[i],
+    amount: buckets[i].total,
+    count: buckets[i].count,
+    average: buckets[i].count > 0 ? buckets[i].total / buckets[i].count : 0,
+  }));
 }
