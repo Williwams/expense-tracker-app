@@ -24,15 +24,15 @@ export default function ExportHistoryPanel({ entries, onClear }: Props) {
   const recent = entries.slice(0, 6);
 
   return (
-    <div className="mt-4 border-t border-gray-100 pt-4">
+    <div className="mt-4 border-t border-slate-200 pt-4">
       <div className="flex items-center justify-between mb-2">
-        <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
+        <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide">
           Export History
         </p>
         {entries.length > 0 && (
           <button
             onClick={onClear}
-            className="flex items-center gap-1 text-xs text-gray-400 hover:text-red-500 transition-colors"
+            className="flex items-center gap-1 text-xs text-slate-400 hover:text-red-500 transition-colors"
           >
             <Trash2 size={11} /> Clear
           </button>

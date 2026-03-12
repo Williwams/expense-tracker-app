@@ -32,12 +32,12 @@ export default function ExportPreviewTable({ expenses }: Props) {
   }
 
   return (
-    <div className="border border-gray-200 rounded-xl overflow-hidden">
+    <div className="border border-slate-200 rounded-xl overflow-hidden">
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
           <thead>
-            <tr className="bg-gray-50 border-b border-gray-200">
-              <th className="text-left px-3 py-2.5 text-xs font-semibold text-gray-600">
+            <tr className="bg-slate-100 border-b border-slate-200">
+              <th className="text-left px-3 py-2.5 text-xs font-semibold text-slate-600">
                 <button
                   className="flex items-center gap-1 hover:text-gray-900 transition-colors"
                   onClick={() => { setPage(0); setSortDir((d) => d === "desc" ? "asc" : "desc"); }}
@@ -45,9 +45,9 @@ export default function ExportPreviewTable({ expenses }: Props) {
                   Date {sortDir === "desc" ? <ChevronDown size={12} /> : <ChevronUp size={12} />}
                 </button>
               </th>
-              <th className="text-left px-3 py-2.5 text-xs font-semibold text-gray-600">Category</th>
-              <th className="text-right px-3 py-2.5 text-xs font-semibold text-gray-600">Amount</th>
-              <th className="text-left px-3 py-2.5 text-xs font-semibold text-gray-600">Description</th>
+              <th className="text-left px-3 py-2.5 text-xs font-semibold text-slate-600">Category</th>
+              <th className="text-right px-3 py-2.5 text-xs font-semibold text-slate-600">Amount</th>
+              <th className="text-left px-3 py-2.5 text-xs font-semibold text-slate-600">Description</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100">
@@ -74,14 +74,14 @@ export default function ExportPreviewTable({ expenses }: Props) {
       </div>
 
       {totalPages > 1 && (
-        <div className="flex items-center justify-between px-3 py-2 bg-gray-50 border-t border-gray-200 text-xs text-gray-500">
+        <div className="flex items-center justify-between px-3 py-2 bg-slate-100 border-t border-slate-200 text-xs text-slate-500">
           <span>
             Showing {page * PAGE_SIZE + 1}–{Math.min((page + 1) * PAGE_SIZE, expenses.length)} of {expenses.length}
           </span>
           <div className="flex gap-1">
             <button disabled={page === 0} onClick={() => setPage((p) => p - 1)} className="px-2 py-1 rounded border border-gray-200 bg-white hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed">‹</button>
             {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => (
-              <button key={i} onClick={() => setPage(i)} className={`px-2 py-1 rounded border transition-colors ${page === i ? "bg-indigo-600 text-white border-indigo-600" : "border-gray-200 bg-white hover:bg-gray-100"}`}>{i + 1}</button>
+              <button key={i} onClick={() => setPage(i)} className={`px-2 py-1 rounded border transition-colors ${page === i ? "bg-teal-600 text-white border-teal-600" : "border-slate-200 bg-white hover:bg-slate-100"}`}>{i + 1}</button>
             ))}
             <button disabled={page >= totalPages - 1} onClick={() => setPage((p) => p + 1)} className="px-2 py-1 rounded border border-gray-200 bg-white hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed">›</button>
           </div>
