@@ -12,12 +12,17 @@ export default function AddExpensePage() {
   const { addExpense } = useExpenses();
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
 
-  function handleSubmit(data: ExpenseFormData) {
-    const expense = addExpense(data);
-    setSuccessMsg(
-      `Added: ${expense.description} — $${expense.amount.toFixed(2)}`
-    );
-    setTimeout(() => setSuccessMsg(null), 3000);
+  async function handleSubmit(data: ExpenseFormData) {
+    try {
+      const expense = await addExpense(data);
+      setSuccessMsg(
+        `Added: ${expense.description} — $${expense.amount.toFixed(2)}`
+      );
+      setTimeout(() => setSuccessMsg(null), 3000);
+    } catch (err) {
+      setSuccessMsg(null);
+      alert(err instanceof Error ? err.message : "Failed to add expense");
+    }
   }
 
   return (

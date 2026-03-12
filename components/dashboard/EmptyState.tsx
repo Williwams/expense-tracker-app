@@ -43,7 +43,7 @@ const SEED_EXPENSES: { daysAgo: number; amount: string; category: Category; desc
 export default function EmptyState() {
   const { addExpense } = useExpenses();
 
-  function loadSampleData() {
+  async function loadSampleData() {
     for (const seed of SEED_EXPENSES) {
       const data: ExpenseFormData = {
         date: format(subDays(new Date(), seed.daysAgo), "yyyy-MM-dd"),
@@ -51,7 +51,7 @@ export default function EmptyState() {
         category: seed.category,
         description: seed.description,
       };
-      addExpense(data);
+      await addExpense(data);
     }
   }
 

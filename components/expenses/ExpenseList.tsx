@@ -11,8 +11,8 @@ import Link from "next/link";
 
 interface Props {
   expenses: Expense[];
-  onDelete: (id: string) => void;
-  onUpdate: (id: string, data: ExpenseFormData) => void;
+  onDelete: (id: string) => void | Promise<void>;
+  onUpdate: (id: string, data: ExpenseFormData) => void | Promise<void>;
   onExport: () => void;
 }
 

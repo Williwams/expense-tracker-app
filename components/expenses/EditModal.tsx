@@ -8,7 +8,7 @@ import { useEffect } from "react";
 interface Props {
   expense: Expense | null;
   onClose: () => void;
-  onSave: (id: string, data: ExpenseFormData) => void;
+  onSave: (id: string, data: ExpenseFormData) => void | Promise<void>;
 }
 
 export default function EditModal({ expense, onClose, onSave }: Props) {

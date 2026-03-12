@@ -8,7 +8,7 @@ import { Pencil, Trash2, X, Check } from "lucide-react";
 
 interface Props {
   expense: Expense;
-  onDelete: (id: string) => void;
+  onDelete: (id: string) => void | Promise<void>;
   onEdit: (expense: Expense) => void;
 }
 

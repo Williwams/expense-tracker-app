@@ -4,86 +4,73 @@ import { useState, useEffect, useCallback } from "react";
 import { Expense, ExpenseFormData } from "@/types/expense";
 import { format } from "date-fns";
 
-const STORAGE_KEY = "expense-tracker-data";
-
-function generateId(): string {
-  return `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
-}
-
-function loadFromStorage(): Expense[] {
-  if (typeof window === "undefined") return [];
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return [];
-    return JSON.parse(raw) as Expense[];
-  } catch {
-    return [];
+async function apiFetch<T>(url: string, options?: RequestInit): Promise<T> {
+  const res = await fetch(url, options);
+  if (!res.ok) {
+    const body = await res.json().catch(() => ({}));
+    throw new Error(body.error || `Request failed (${res.status})`);
   }
-}
-
-function saveToStorage(expenses: Expense[]): void {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(expenses));
-  } catch {
-    // ignore storage errors
-  }
+  return res.json();
 }
 
 export function useExpenses() {
   const [expenses, setExpenses] = useState<Expense[]>([]);
   const [isLoaded, setIsLoaded] = useState(false);
 
-  useEffect(() => {
-    const stored = loadFromStorage();
-    setExpenses(stored);
-    setIsLoaded(true);
+  const fetchExpenses = useCallback(async () => {
+    try {
+      const data = await apiFetch<Expense[]>("/api/expenses");
+      setExpenses(data);
+    } catch (err) {
+      console.error("Failed to fetch expenses:", err);
+    } finally {
+      setIsLoaded(true);
+    }
   }, []);
 
+  useEffect(() => {
+    fetchExpenses();
+  }, [fetchExpenses]);
+
   const addExpense = useCallback(
-    (data: ExpenseFormData): Expense => {
-      const expense: Expense = {
-        id: generateId(),
-        date: data.date,
-        amount: parseFloat(data.amount),
-        category: data.category,
-        description: data.description.trim(),
-        createdAt: new Date().toISOString(),
-      };
-      const updated = [expense, ...expenses];
-      setExpenses(updated);
-      saveToStorage(updated);
+    async (data: ExpenseFormData): Promise<Expense> => {
+      const expense = await apiFetch<Expense>("/api/expenses", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          date: data.date,
+          amount: parseFloat(data.amount),
+          category: data.category,
+          description: data.description.trim(),
+        }),
+      });
+      setExpenses((prev) => [expense, ...prev]);
       return expense;
     },
-    [expenses]
+    []
   );
 
   const updateExpense = useCallback(
-    (id: string, data: ExpenseFormData): void => {
-      const updated = expenses.map((e) =>
-        e.id === id
-          ? {
-              ...e,
-              date: data.date,
-              amount: parseFloat(data.amount),
-              category: data.category,
-              description: data.description.trim(),
-            }
-          : e
-      );
-      setExpenses(updated);
-      saveToStorage(updated);
+    async (id: string, data: ExpenseFormData): Promise<void> => {
+      const updated = await apiFetch<Expense>(`/api/expenses/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          date: data.date,
+          amount: parseFloat(data.amount),
+          category: data.category,
+          description: data.description.trim(),
+        }),
+      });
+      setExpenses((prev) => prev.map((e) => (e.id === id ? updated : e)));
     },
-    [expenses]
+    []
   );
 
-  const deleteExpense = useCallback(
-    (id: string): void => {
-      const updated = expenses.filter((e) => e.id !== id);
-      setExpenses(updated);
-      saveToStorage(updated);
-    },
-    [expenses]
-  );
+  const deleteExpense = useCallback(async (id: string): Promise<void> => {
+    await apiFetch(`/api/expenses/${id}`, { method: "DELETE" });
+    setExpenses((prev) => prev.filter((e) => e.id !== id));
+  }, []);
 
   const exportCSV = useCallback((): void => {
     const header = ["Date", "Amount", "Category", "Description"];
