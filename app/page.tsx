@@ -6,6 +6,8 @@ import SummaryCards from "@/components/dashboard/SummaryCards";
 import SpendingChart from "@/components/dashboard/SpendingChart";
 import CategoryChart from "@/components/dashboard/CategoryChart";
 import RecentExpenses from "@/components/dashboard/RecentExpenses";
+import SpendingInsights from "@/components/dashboard/SpendingInsights";
+import DayOfWeekChart from "@/components/dashboard/DayOfWeekChart";
 import EmptyState from "@/components/dashboard/EmptyState";
 import ExportModal from "@/components/export/ExportModal";
 import Link from "next/link";
@@ -72,6 +74,16 @@ export default function DashboardPage() {
         </div>
         <div className="lg:col-span-2">
           <CategoryChart expenses={expenses} />
+        </div>
+      </div>
+
+      {/* Patterns row */}
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+        <div className="lg:col-span-3">
+          <DayOfWeekChart expenses={expenses} />
+        </div>
+        <div className="lg:col-span-2">
+          <SpendingInsights expenses={expenses} />
         </div>
       </div>
 
