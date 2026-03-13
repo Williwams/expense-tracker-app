@@ -1,0 +1,59 @@
+Top Expense Categories - Implementation Summary
+================================================
+
+What Was Implemented
+--------------------
+1. New "Top Categories" page at /categories that provides a ranked breakdown
+   of spending by category. Features include:
+   - Page header with title and subtitle
+   - Time period filter (All Time, This Month, Last 3 Months, Last 6 Months, This Year)
+   - Summary cards showing: categories used, total spending, transaction count
+   - Ranked list of categories sorted by total spending (descending), each showing:
+     * Rank number
+     * Category emoji icon and name (from CATEGORY_ICONS)
+     * Total amount (formatted with formatCurrency)
+     * Number of transactions
+     * Average transaction amount
+     * Percentage of total spending
+     * Visual progress bar using the category's color from CATEGORY_COLORS
+   - Bar chart (recharts BarChart) visualizing spending by category with
+     per-category colors
+
+2. Updated Navbar to include a "Categories" nav item (with PieChart icon from
+   lucide-react) positioned after "Expenses" and before "Add Expense".
+
+Files Created
+-------------
+- app/categories/page.tsx - The Top Categories page component
+
+Files Modified
+--------------
+- components/layout/Navbar.tsx - Added PieChart import and Categories nav item
+
+Dependencies Used (all pre-existing)
+-------------------------------------
+- recharts (BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell)
+- date-fns (parseISO, startOfMonth, startOfYear, subMonths, isAfter)
+- lucide-react (TrendingUp, Hash, DollarSign for summary cards; PieChart for navbar)
+- @/hooks/useExpenses (useExpenses hook)
+- @/lib/utils (formatCurrency, getCategoryTotals, getTotalSpending)
+- @/types/expense (Category, CATEGORY_COLORS, CATEGORY_ICONS)
+
+Testing Approach
+----------------
+- Build verification: run `npm run build` in the worktree to confirm no
+  TypeScript or compilation errors
+- Manual verification: run `npm run dev` and navigate to /categories to confirm
+  the page renders correctly with data, filters work, chart displays, and
+  the navbar link is active when on the page
+
+Integration Notes for Merging Back to Main
+------------------------------------------
+- This feature is self-contained: one new page file and one small navbar edit.
+- No database or API changes were made; the page uses the existing useExpenses()
+  hook and getCategoryTotals() utility.
+- No new dependencies were added.
+- Merge the feature/top-categories branch into main. The only potential conflict
+  is in Navbar.tsx if other branches have modified the navItems array or the
+  lucide-react import line.
+- After merging, verify the build passes and the /categories route works.

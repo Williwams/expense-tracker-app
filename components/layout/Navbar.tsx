@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, List, PlusCircle, PieChart, Store, Menu, X } from "lucide-react";
+import { LayoutDashboard, List, PlusCircle, PieChart, Store, Lightbulb, Menu, X } from "lucide-react";
 import { useState } from "react";
 
 const navItems = [
@@ -10,6 +10,7 @@ const navItems = [
   { href: "/expenses", label: "Expenses", icon: List },
   { href: "/vendors", label: "Vendors", icon: Store },
   { href: "/categories", label: "Categories", icon: PieChart },
+  { href: "/insights", label: "Insights", icon: Lightbulb },
   { href: "/add", label: "Add Expense", icon: PlusCircle },
 ];
 

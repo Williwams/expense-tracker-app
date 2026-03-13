@@ -1,0 +1,10 @@
+I want to ensure that applications restart as expected. due to changes in libraries, sometimes an update will require a rebuild and restart to accomplish
+
+Phase 1 - Identify changes:
+Search for any changes that you have made since the last build and determine if they would require a rebuild `npm run build` action to display, such as changes to package.json, package-lock.json. If this is the case, run build again
+
+Phase 2 - Restart instance in development mode
+run and troubleshoot `npm run dev`. Repeatedly scan until the application is up and visible
+
+Phase 3 - Provide update
+give a summary of if and why a rebuild was necessary, and that the restart is complete

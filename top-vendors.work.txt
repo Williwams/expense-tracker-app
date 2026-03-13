@@ -1,0 +1,60 @@
+Top Vendors Feature - Implementation Summary
+=============================================
+
+What Was Implemented
+--------------------
+
+1. Top Vendors Page (/app/vendors/page.tsx)
+   - A full page at /vendors showing ranked vendor spending analysis
+   - Page header with title "Top Vendors" and subtitle
+   - Time period filter with 5 options: All Time, This Month, Last 3 Months, Last 6 Months, This Year
+   - Summary section with 3 cards: Unique Vendors count, Total Spending, Most Frequent Vendor
+   - Horizontal bar chart (recharts BarChart with layout="vertical") showing top 10 vendors by spending
+   - Ranked list of top 20 vendors (sorted by total spending descending) showing:
+     - Rank number (top 3 highlighted with indigo background)
+     - Vendor name (expense description field)
+     - Total amount spent (formatted with formatCurrency)
+     - Number of transactions
+     - Average transaction amount
+     - Most common category with emoji icon
+     - Percentage of total spending
+     - Visual progress bar showing percentage
+   - Loading spinner while data loads (matches existing pattern)
+   - Empty state when no expenses exist
+
+2. Navbar Update (components/layout/Navbar.tsx)
+   - Added "Vendors" nav item with Store icon from lucide-react
+   - Positioned after "Expenses" and before "Add Expense"
+   - Works in both desktop and mobile navigation
+
+Files Created
+-------------
+- app/vendors/page.tsx (new - Top Vendors page component)
+
+Files Modified
+--------------
+- components/layout/Navbar.tsx (added Vendors nav item and Store icon import)
+
+Dependencies Used (all pre-existing)
+-------------------------------------
+- recharts (BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell)
+- lucide-react (Store, TrendingUp, Hash, DollarSign)
+- date-fns (parseISO, isAfter, startOfMonth, subMonths, startOfYear)
+- @/hooks/useExpenses (useExpenses hook)
+- @/lib/utils (formatCurrency)
+- @/types/expense (Category, CATEGORY_ICONS, CATEGORY_BG)
+
+Testing Approach
+----------------
+- Build verification: run `npm run build` to confirm no TypeScript or compilation errors
+- Manual testing: navigate to /vendors to verify page renders, time filters work, and chart displays
+- Edge cases handled: empty expenses state, zero total spending, single transaction vendors
+
+Integration Notes for Merging Back to Main
+-------------------------------------------
+- This feature is self-contained in a single new page file plus a one-line navbar addition
+- No changes to existing components, hooks, utilities, or API routes
+- No new dependencies added - uses only existing project dependencies
+- No database schema changes required
+- The feature branch (feature/top-vendors) can be merged cleanly into main
+- After merge, verify the /vendors route works and the navbar link appears correctly
