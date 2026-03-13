@@ -258,8 +258,8 @@ export default function CategoriesPage() {
                     tickFormatter={(v: number) => `$${v}`}
                   />
                   <Tooltip
-                    formatter={(value: number) => [
-                      formatCurrency(value),
+                    formatter={(value) => [
+                      formatCurrency(Number(value)),
                       "Amount",
                     ]}
                     contentStyle={{
