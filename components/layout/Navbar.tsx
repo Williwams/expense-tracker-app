@@ -2,12 +2,13 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, List, PlusCircle, Menu, X } from "lucide-react";
+import { LayoutDashboard, List, PlusCircle, Store, Menu, X } from "lucide-react";
 import { useState } from "react";
 
 const navItems = [
   { href: "/", label: "Dashboard", icon: LayoutDashboard },
   { href: "/expenses", label: "Expenses", icon: List },
+  { href: "/vendors", label: "Vendors", icon: Store },
   { href: "/add", label: "Add Expense", icon: PlusCircle },
 ];
 
