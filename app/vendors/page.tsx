@@ -248,7 +248,7 @@ export default function VendorsPage() {
                   tick={{ fill: "#374151" }}
                 />
                 <Tooltip
-                  formatter={(value: number) => [formatCurrency(value), "Total"]}
+                  formatter={(value) => [formatCurrency(Number(value)), "Total"]}
                   contentStyle={{
                     borderRadius: "12px",
                     border: "1px solid #e5e7eb",
